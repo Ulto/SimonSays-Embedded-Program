@@ -13,24 +13,12 @@
 #include <stdlib.h>
 #include "GamePlayFunctions.c"
 #include "Main.h"
-
-// DEFINES
-#define MAX_PATTERN_LENGTH 	25
-#define MAX_ROUNDS			10
-
-
-// FUNCTION PROTOTYPES
-void PrintHeader(void);
+#include "gpio.h"
+#include "ntwk.h"
+#include "Threads.h"
 
 
-// GLOBAL VARIABLES
-struct game_data_struct
-{
-	char 	pattern[MAX_PATTERN_LENGTH];
-	int 	round_num;
 
-
-} game_data;
 
 
 int main()
@@ -62,7 +50,7 @@ int main()
 			// Increment ui_flag
 			ui_flag += 1;
 
-		} while((user_input != '1') | (user_input != '2'))
+		} while ((user_input != '1') | (user_input != '2'));
 
 
 

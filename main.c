@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "GamePlayFunctions.c"
+#include "Main.h"
 
 // DEFINES
 #define MAX_PATTERN_LENGTH 	25

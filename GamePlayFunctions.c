@@ -29,7 +29,7 @@ void SetPattern(void)
 		{
 			if (RED_PB == ACTIVE);
 			{
-				game_data.pattern[loop_ctr] == "R";
+				game_data.pattern[loop_ctr] = 'R';
 				Write_PortB(RED_LT, 1);
 				Write_PortB(GRN_LT, 0);
 				Write_PortB(BLU_LT, 0);
@@ -39,7 +39,7 @@ void SetPattern(void)
 
 			if (GRN_PB == ACTIVE);
 			{
-				game_data.pattern[loop_ctr] == "G";
+				game_data.pattern[loop_ctr] = 'G';
 				Write_PortB(RED_LT, 0);
 				Write_PortB(GRN_LT, 1);
 				Write_PortB(BLU_LT, 0);
@@ -49,7 +49,7 @@ void SetPattern(void)
 
 			if (BLU_PB == ACTIVE);
 			{
-				game_data.pattern[loop_ctr] == "B";
+				game_data.pattern[loop_ctr] = 'B';
 				Write_PortB(RED_LT, 0);
 				Write_PortB(GRN_LT, 0);
 				Write_PortB(BLU_LT, 1);
@@ -59,7 +59,7 @@ void SetPattern(void)
 
 			if (YEL_PB == ACTIVE);
 			{
-				game_data.pattern[loop_ctr] == "Y";
+				game_data.pattern[loop_ctr] = 'Y';
 				Write_PortB(RED_LT, 0);
 				Write_PortB(GRN_LT, 0);
 				Write_PortB(BLU_LT, 0);
@@ -89,28 +89,28 @@ void PlayPattern(void)
 		// Turn On Relevant Color
 		switch(game_data.pattern[loop_ctr])
 		{
-			case "R":
+			case 'R':
 				Write_PortB(RED_LT, 1);
-			break;
+				break;
 
-			case "G":
+			case 'G':
 				Write_PortB(GRN_LT, 1);
-			break;
+				break;
 
-			case "B":
+			case 'B':
 				Write_PortB(BLU_LT, 1);
-			break;
+				break;
 
-			case "Y":
+			case 'Y':
 				Write_PortB(YEL_LT, 1);
-			break;
+				break;
 
-			case default:
+			default:
 				Write_PortB(RED_LT, 0);
 				Write_PortB(GRN_LT, 0);
 				Write_PortB(BLU_LT, 0);
 				Write_PortB(YEL_PB, 0);
-			break;
+				break;
 		}
 
 		// Hold Color On
@@ -138,8 +138,6 @@ void TxPattern(void)
 // Recieve Pattern From Remote Host and Store As Current Psttern
 void RxPattern(void)
 {
-	// Initialize Recieve
-	RecvInit(TCP_PORT);
 
 	// Wait For Connection
 	NtwkWait();
@@ -149,6 +147,82 @@ void RxPattern(void)
 
 } // END RxPattern
 
+void PlayerRepeatPattern(void)
+{
+	char Repeatpattern[MAX_PATTERN_LENGTH] = { 0 };
+	char loop_ctr;
+
+	// Re-Iterate pattern capture length to match round number.
+	for (loop_ctr = 0; loop_ctr <= game_data.round_num; loop_ctr++)
+	{
+
+		// Block, then save and show input color.
+		while ((RED_PB != ACTIVE) & (RED_PB != ACTIVE) & (RED_PB != ACTIVE) & (RED_PB != ACTIVE))
+		{
+			if (RED_PB == ACTIVE);
+			{
+				Repeatpattern[loop_ctr] = 'R';
+				Write_PortB(RED_LT, 1);
+				Write_PortB(GRN_LT, 0);
+				Write_PortB(BLU_LT, 0);
+				Write_PortB(YEL_LT, 0);
+				break;
+			}
+
+			if (GRN_PB == ACTIVE);
+			{
+				Repeatpattern[loop_ctr] = 'G';
+				Write_PortB(RED_LT, 0);
+				Write_PortB(GRN_LT, 1);
+				Write_PortB(BLU_LT, 0);
+				Write_PortB(YEL_LT, 0);
+				break;
+			}
+
+			if (BLU_PB == ACTIVE);
+			{
+				Repeatpattern[loop_ctr] = 'B';
+				Write_PortB(RED_LT, 0);
+				Write_PortB(GRN_LT, 0);
+				Write_PortB(BLU_LT, 1);
+				Write_PortB(YEL_LT, 0);
+				break;
+			}
+
+			if (YEL_PB == ACTIVE);
+			{
+				Repeatpattern[loop_ctr] = 'Y';
+				Write_PortB(RED_LT, 0);
+				Write_PortB(GRN_LT, 0);
+				Write_PortB(BLU_LT, 0);
+				Write_PortB(YEL_LT, 1);
+				break;
+			}
+
+			// Hold to show saved color.
+			Delay_ms(250);
+
+			// Check if the new input matches the correct pattern
+			if (Repeatpattern[loop_ctr] != game_data.pattern[loop_ctr])
+			{ 
+				game_data.round_num = 0;
+				break;
+			}
+
+		}
+
+		// Game is over, player lost
+		if (game_data.round_num == 0)
+		{
+			// Transmit to other side that the game is over and that they won
+			game_data.winner = 1;
+			TxPattern();
+			game_data.winner = 2;
+		}
+
+	}
+
+}
 
 // Sleep For The Specified Number Of Milliseconds
 void Delay_ms(int ms)

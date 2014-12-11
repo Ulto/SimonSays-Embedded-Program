@@ -30,14 +30,14 @@ void PlayPattern(void);
 void TxPattern(void);
 void RxPattern(void);
 void Delay_ms(int);
-
+void PlayerRepeatPattern(void);
 
 // GLOBAL VARIABLES
 struct game_data_struct
 {
 	char 	pattern[MAX_PATTERN_LENGTH];
 	int 	round_num;
-
+	int		winner;		// 1 is winner, 2 is loser
 } game_data;
 
 

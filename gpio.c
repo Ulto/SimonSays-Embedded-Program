@@ -7,7 +7,6 @@
 #include <pthread.h>
 
 #include "gpio.h"
-#include "Lab5.h"
 
 static FILE *InitInput(int numb);
 static FILE *InitOutput(int numb);

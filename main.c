@@ -26,16 +26,20 @@ int main()
 	// Variable Declarations
 	char user_input;
 	int  ui_flag		= 0;
+	char remote_IP[20] 	= {"127.0.0.1"};
 
 	// Initialization
 		// Game Variables
 		game_data.round_num = 1;
 
-		// Network Connection
+		// Open Connection With Remote Host
+		SendInit(remote_IP, TCP_PORT);
 
 
 		// Determine If Master or Slave
 		PrintHeader();
+
+
 		do
 		{
 			// If ui_flag has been set, the loop is no longer on its forst iteration; print error message.
@@ -89,7 +93,8 @@ int main()
 
 	}
 
-	
+	// Terminate Network Connection
+	NtwkExit();
 
 	exit(0);
 } // END main

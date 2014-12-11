@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-//#define _UNIX_ 1
+#define _UNIX_
 
 #ifndef _UNIX_
 #include <windows.h>

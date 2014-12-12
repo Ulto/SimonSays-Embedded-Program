@@ -26,6 +26,25 @@ int main()
 
 	game_data = (struct game_data_struct*)malloc(sizeof(struct game_data_struct));
 
+	//////////////////////////////////////////
+	Write_PortB(RED_LT, 1);
+	Delay_ms(500);
+	Write_PortB(RED_LT, 0);
+	Delay_ms(500);
+	Write_PortB(GRN_LT, 1);
+	Delay_ms(500);
+	Write_PortB(GRN_LT, 0);
+	Delay_ms(500);
+	Write_PortB(BLU_LT, 1);
+	Delay_ms(500);
+	Write_PortB(BLU_LT, 0);
+	Delay_ms(500);
+	Write_PortB(YEL_LT, 1);
+	Delay_ms(500);
+	Write_PortB(YEL_LT, 0);
+	Delay_ms(500);
+
+
 	// Initialization
 		// Game Variables
 		//memset();
@@ -125,15 +144,19 @@ int main()
 			}
 
 			// Play Back Current Pattern
+			printf("CALL PlayPattern\n");
 			PlayPattern(game_data);
 
 			// Let the player repeat the pattern
+			printf("CALL PlayerRepeatPattern\n");
 			PlayerRepeatPattern(game_data);
 
 			// Record New Pattern Based On User Input
+			printf("CALL SetPattern\n");
 			SetPattern(game_data);
 
 			// Send Current Pattern To Remote Host
+			printf("CALL TxPattern\n");
 			TxPattern(game_data);
 
 			game_data->round_num++;

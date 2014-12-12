@@ -7,6 +7,7 @@
 //
 // Gameplay Functions
 
+#include <stdio.h>
 #include "Main.h"
 
 // Record New Pattern Based On User Input
@@ -74,6 +75,12 @@ void SetPattern(struct game_data_struct *game_data)
 
 			// Hold to show saved color.
 			Delay_ms(500);
+
+		// Ensure All Outputs Are Off
+		Write_PortB(RED_LT, 0);
+		Write_PortB(GRN_LT, 0);
+		Write_PortB(BLU_LT, 0);
+		Write_PortB(YEL_PB, 0);
 		
 	}
 
@@ -85,8 +92,11 @@ void PlayPattern(struct game_data_struct *game_data)
 {
 	int loop_ctr;
 
-	for (loop_ctr = 0; loop_ctr < MAX_PATTERN_LENGTH; loop_ctr ++)
+	for (loop_ctr = 0; loop_ctr < game_data->round_num; loop_ctr ++)
 	{
+		//
+		printf("Play Pattern Loop Iteration: %d (%c)\n", loop_ctr, game_data->pattern[loop_ctr]);
+
 		// Pause Before Next Color
 		Delay_ms(PATTERN_PLAYBACK_DELAY);
 
@@ -94,22 +104,27 @@ void PlayPattern(struct game_data_struct *game_data)
 		switch(game_data->pattern[loop_ctr])
 		{
 			case 'R':
+				printf("Turn on Red\n");
 				Write_PortB(RED_LT, 1);
 				break;
 
 			case 'G':
+				printf("Turn on Green\n");
 				Write_PortB(GRN_LT, 1);
 				break;
 
 			case 'B':
+				printf("Turn on Blue\n");
 				Write_PortB(BLU_LT, 1);
 				break;
 
 			case 'Y':
+				printf("Turn on yellow\n");
 				Write_PortB(YEL_LT, 1);
 				break;
 
 			default:
+				printf("Turn off\n");
 				Write_PortB(RED_LT, 0);
 				Write_PortB(GRN_LT, 0);
 				Write_PortB(BLU_LT, 0);
@@ -134,7 +149,7 @@ void PlayPattern(struct game_data_struct *game_data)
 void TxPattern(struct game_data_struct *game_data)
 {
 	// Send game_data struct to remote host.
-	NtwkSend(sizeof(game_data), game_data);
+	NtwkSend(sizeof(struct game_data_struct), game_data);
 
 } // END TxPattern
 
@@ -143,7 +158,11 @@ void TxPattern(struct game_data_struct *game_data)
 void RxPattern(struct game_data_struct *game_data)
 {
 	// Recieve game_data struct from remote host.
-	NtwkRecv(sizeof(game_data), game_data);
+	do
+	{
+		Delay_ms(10);
+
+	} while (NtwkRecv(sizeof(struct game_data_struct), game_data) == 0);
 
 } // END RxPattern
 
@@ -155,7 +174,7 @@ void PlayerRepeatPattern(struct game_data_struct *game_data)
 	char loop_ctr;
 
 	// Re-Iterate pattern capture length to match round number.
-	for (loop_ctr = 0; loop_ctr <= game_data->round_num; loop_ctr++)
+	for (loop_ctr = 0; loop_ctr < game_data->round_num; loop_ctr++)
 	{
 
 		// Block, then save and show input color.
@@ -167,7 +186,8 @@ void PlayerRepeatPattern(struct game_data_struct *game_data)
 
 			if (Read_PortB(RED_PB) == ACTIVE)
 			{
-				game_data->pattern[loop_ctr] = 'R';
+				printf("Turn on Red\n");
+				Repeatpattern[loop_ctr] = 'R';
 				Write_PortB(RED_LT, 1);
 				Write_PortB(GRN_LT, 0);
 				Write_PortB(BLU_LT, 0);
@@ -175,7 +195,8 @@ void PlayerRepeatPattern(struct game_data_struct *game_data)
 			}
 			else if (Read_PortB(GRN_PB) == ACTIVE)
 			{
-				game_data->pattern[loop_ctr] = 'G';
+				printf("Turn on Green\n");
+				Repeatpattern[loop_ctr] = 'G';
 				Write_PortB(RED_LT, 0);
 				Write_PortB(GRN_LT, 1);
 				Write_PortB(BLU_LT, 0);
@@ -183,7 +204,8 @@ void PlayerRepeatPattern(struct game_data_struct *game_data)
 			}
 			else if (Read_PortB(BLU_PB) == ACTIVE)
 			{
-				game_data->pattern[loop_ctr] = 'B';
+				printf("Turn on Blue\n");
+				Repeatpattern[loop_ctr] = 'B';
 				Write_PortB(RED_LT, 0);
 				Write_PortB(GRN_LT, 0);
 				Write_PortB(BLU_LT, 1);
@@ -191,7 +213,8 @@ void PlayerRepeatPattern(struct game_data_struct *game_data)
 			}
 			else if (Read_PortB(YEL_PB) == ACTIVE)
 			{
-				game_data->pattern[loop_ctr] = 'Y';
+				printf("Turn on yellow\n");
+				Repeatpattern[loop_ctr] = 'Y';
 				Write_PortB(RED_LT, 0);
 				Write_PortB(GRN_LT, 0);
 				Write_PortB(BLU_LT, 0);
@@ -216,6 +239,7 @@ void PlayerRepeatPattern(struct game_data_struct *game_data)
 		// Game is over, player lost
 		if (game_data->round_num == 0)
 		{
+			printf("game over\n");
 			// Transmit to other side that the game is over and that they won
 			game_data->winner = 1;
 			TxPattern(game_data);

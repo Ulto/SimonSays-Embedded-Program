@@ -11,7 +11,7 @@
 #define TCP_PORT				1500
 #define ACTIVE					1
 
-//#define FIRST
+#define FIRST
 
 #ifdef FIRST
 	// LED Output(s)
@@ -35,7 +35,7 @@
 	#define YEL_LT		18
 
 	// Push-button Input(s)
-	#define RED_PB		19
+	#define RED_PB		12
 	#define GRN_PB		20
 	#define BLU_PB		21
 	#define YEL_PB		22

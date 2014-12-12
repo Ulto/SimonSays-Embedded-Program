@@ -252,4 +252,3 @@ static void PortWrite(FILE *fd, int data)
 
    rewind(fd);
 }
-

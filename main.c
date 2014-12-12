@@ -19,6 +19,7 @@ int main()
 {
 	// Variable Declarations
 	char user_input;
+	int errorNtwk = 0;
 	int  ui_flag		= 0;
 	char remote_IP[20] 	= {"127.0.0.1"};
 	struct game_data_struct *game_data;
@@ -68,7 +69,11 @@ int main()
 		{
 			// Initialize Recieve
 			printf("CALL RecvInit\n");
-			RecvInit(TCP_PORT);
+			errorNtwk = RecvInit(TCP_PORT);
+			if (errorNtwk == 0)
+				NtwkWait();
+			else
+				printf("Network Error: %d\n", errorNtwk);
 		}
 
 	// Main Game Play Loop

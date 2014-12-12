@@ -351,7 +351,11 @@ int NtwkRecv(int length, unsigned char *datap)
       max = length;
 
    /* get an incoming data block up to size "length" */
-   length = recv(sock_fh, (char *)datap, max, 0);
+length = 0;
+   while (length < max)
+{
+   length += recv(sock_fh, (char *)&datap[length], max-length, 0);
+}
 
    if (length < 0)
        return(ERR_SEND_RECV);

@@ -1497,7 +1497,7 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <part name="GRN_PB" library="SparkFun-Retired" deviceset="TAC_SWITCH" device="PTH"/>
 <part name="BLU_PB" library="SparkFun-Retired" deviceset="TAC_SWITCH" device="PTH"/>
 <part name="YEL_PB" library="SparkFun-Retired" deviceset="TAC_SWITCH" device="PTH"/>
-<part name="+3.3VDC" library="SparkFun-Aesthetics" deviceset="VCC" device="" value="VCC (5 VDC)"/>
+<part name="+3.3VDC" library="SparkFun-Aesthetics" deviceset="VCC" device="" value="VCC (+3.3 VDC)"/>
 <part name="GND1" library="SparkFun-Aesthetics" deviceset="GND" device=""/>
 <part name="R1" library="SparkFun-Passives" deviceset="RESISTOR" device="EZ"/>
 <part name="R2" library="SparkFun-Passives" deviceset="RESISTOR" device="EZ"/>

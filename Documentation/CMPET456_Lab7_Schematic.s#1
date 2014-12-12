@@ -1497,7 +1497,7 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <part name="GRN_PB" library="SparkFun-Retired" deviceset="TAC_SWITCH" device="PTH"/>
 <part name="BLU_PB" library="SparkFun-Retired" deviceset="TAC_SWITCH" device="PTH"/>
 <part name="YEL_PB" library="SparkFun-Retired" deviceset="TAC_SWITCH" device="PTH"/>
-<part name="+3.3VDC" library="SparkFun-Aesthetics" deviceset="VCC" device=""/>
+<part name="+3.3VDC" library="SparkFun-Aesthetics" deviceset="VCC" device="" value="VCC (5 VDC)"/>
 <part name="GND1" library="SparkFun-Aesthetics" deviceset="GND" device=""/>
 <part name="R1" library="SparkFun-Passives" deviceset="RESISTOR" device="EZ"/>
 <part name="R2" library="SparkFun-Passives" deviceset="RESISTOR" device="EZ"/>
@@ -1513,15 +1513,15 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <part name="PB2" library="SparkFun-Connectors" deviceset="M01" device="PTH"/>
 <part name="PB3" library="SparkFun-Connectors" deviceset="M01" device="PTH"/>
 <part name="GND2" library="SparkFun-Aesthetics" deviceset="GND" device=""/>
-<part name="REDLT" library="SparkFun-LED" deviceset="LTE-302" device=""/>
-<part name="R5" library="SparkFun-Passives" deviceset="RESISTOR" device="EZ"/>
-<part name="+3.3VDC2" library="SparkFun-Aesthetics" deviceset="VCC" device=""/>
-<part name="GRNLT" library="SparkFun-LED" deviceset="LTE-302" device=""/>
-<part name="BLULT" library="SparkFun-LED" deviceset="LTE-302" device=""/>
-<part name="YELLT" library="SparkFun-LED" deviceset="LTE-302" device=""/>
-<part name="R6" library="SparkFun-Passives" deviceset="RESISTOR" device="EZ"/>
-<part name="R7" library="SparkFun-Passives" deviceset="RESISTOR" device="EZ"/>
-<part name="R8" library="SparkFun-Passives" deviceset="RESISTOR" device="EZ"/>
+<part name="RED-LT" library="SparkFun-LED" deviceset="LTE-302" device=""/>
+<part name="R5" library="SparkFun-Passives" deviceset="RESISTOR" device="EZ" value="330 Ohm"/>
+<part name="+3.3VDC2" library="SparkFun-Aesthetics" deviceset="VCC" device="" value="VCC (+5 VDC)"/>
+<part name="GRN-LT" library="SparkFun-LED" deviceset="LTE-302" device=""/>
+<part name="BLU-LT" library="SparkFun-LED" deviceset="LTE-302" device=""/>
+<part name="YELL-LT" library="SparkFun-LED" deviceset="LTE-302" device=""/>
+<part name="R6" library="SparkFun-Passives" deviceset="RESISTOR" device="EZ" value="180 Ohm"/>
+<part name="R7" library="SparkFun-Passives" deviceset="RESISTOR" device="EZ" value="180 Ohm"/>
+<part name="R8" library="SparkFun-Passives" deviceset="RESISTOR" device="EZ" value="330 Ohm"/>
 </parts>
 <sheets>
 <sheet>
@@ -1567,12 +1567,12 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <attribute name="NAME" x="79.502" y="71.12" size="1.778" layer="95" rot="R270"/>
 </instance>
 <instance part="GND2" gate="1" x="114.3" y="5.08"/>
-<instance part="REDLT" gate="G$1" x="154.94" y="63.5"/>
+<instance part="RED-LT" gate="G$1" x="154.94" y="63.5"/>
 <instance part="R5" gate="G$1" x="154.94" y="76.2" rot="R90"/>
-<instance part="+3.3VDC2" gate="G$1" x="147.32" y="86.36"/>
-<instance part="GRNLT" gate="G$1" x="167.64" y="63.5"/>
-<instance part="BLULT" gate="G$1" x="180.34" y="63.5"/>
-<instance part="YELLT" gate="G$1" x="193.04" y="63.5"/>
+<instance part="+3.3VDC2" gate="G$1" x="147.32" y="88.9"/>
+<instance part="GRN-LT" gate="G$1" x="167.64" y="63.5"/>
+<instance part="BLU-LT" gate="G$1" x="180.34" y="63.5"/>
+<instance part="YELL-LT" gate="G$1" x="193.04" y="63.5"/>
 <instance part="R6" gate="G$1" x="167.64" y="76.2" rot="R90"/>
 <instance part="R7" gate="G$1" x="180.34" y="76.2" rot="R90"/>
 <instance part="R8" gate="G$1" x="193.04" y="76.2" rot="R90"/>
@@ -1606,7 +1606,7 @@ You are welcome to use this library for commercial purposes. For attribution, we
 </segment>
 <segment>
 <pinref part="+3.3VDC2" gate="G$1" pin="VCC"/>
-<wire x1="147.32" y1="86.36" x2="147.32" y2="83.82" width="0.1524" layer="91"/>
+<wire x1="147.32" y1="88.9" x2="147.32" y2="83.82" width="0.1524" layer="91"/>
 <wire x1="147.32" y1="83.82" x2="154.94" y2="83.82" width="0.1524" layer="91"/>
 <pinref part="R5" gate="G$1" pin="2"/>
 <wire x1="154.94" y1="83.82" x2="154.94" y2="81.28" width="0.1524" layer="91"/>
@@ -1699,13 +1699,13 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <net name="N$9" class="0">
 <segment>
 <pinref part="R5" gate="G$1" pin="1"/>
-<pinref part="REDLT" gate="G$1" pin="A"/>
+<pinref part="RED-LT" gate="G$1" pin="A"/>
 <wire x1="154.94" y1="71.12" x2="154.94" y2="66.04" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$10" class="0">
 <segment>
-<pinref part="REDLT" gate="G$1" pin="C"/>
+<pinref part="RED-LT" gate="G$1" pin="C"/>
 <wire x1="154.94" y1="58.42" x2="154.94" y2="53.34" width="0.1524" layer="91"/>
 <pinref part="ULN2003" gate="G$1" pin="18"/>
 <wire x1="154.94" y1="53.34" x2="147.32" y2="53.34" width="0.1524" layer="91"/>
@@ -1715,13 +1715,13 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <segment>
 <pinref part="ULN2003" gate="G$1" pin="17"/>
 <wire x1="147.32" y1="48.26" x2="167.64" y2="48.26" width="0.1524" layer="91"/>
-<pinref part="GRNLT" gate="G$1" pin="C"/>
+<pinref part="GRN-LT" gate="G$1" pin="C"/>
 <wire x1="167.64" y1="48.26" x2="167.64" y2="58.42" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$12" class="0">
 <segment>
-<pinref part="BLULT" gate="G$1" pin="C"/>
+<pinref part="BLU-LT" gate="G$1" pin="C"/>
 <wire x1="180.34" y1="58.42" x2="180.34" y2="43.18" width="0.1524" layer="91"/>
 <wire x1="180.34" y1="43.18" x2="147.32" y2="43.18" width="0.1524" layer="91"/>
 <pinref part="ULN2003" gate="G$1" pin="16"/>
@@ -1731,28 +1731,28 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <segment>
 <pinref part="ULN2003" gate="G$1" pin="15"/>
 <wire x1="147.32" y1="38.1" x2="193.04" y2="38.1" width="0.1524" layer="91"/>
-<pinref part="YELLT" gate="G$1" pin="C"/>
+<pinref part="YELL-LT" gate="G$1" pin="C"/>
 <wire x1="193.04" y1="38.1" x2="193.04" y2="58.42" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$14" class="0">
 <segment>
 <pinref part="R8" gate="G$1" pin="1"/>
-<pinref part="YELLT" gate="G$1" pin="A"/>
+<pinref part="YELL-LT" gate="G$1" pin="A"/>
 <wire x1="193.04" y1="71.12" x2="193.04" y2="66.04" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$15" class="0">
 <segment>
 <pinref part="R7" gate="G$1" pin="1"/>
-<pinref part="BLULT" gate="G$1" pin="A"/>
+<pinref part="BLU-LT" gate="G$1" pin="A"/>
 <wire x1="180.34" y1="71.12" x2="180.34" y2="66.04" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$16" class="0">
 <segment>
 <pinref part="R6" gate="G$1" pin="1"/>
-<pinref part="GRNLT" gate="G$1" pin="A"/>
+<pinref part="GRN-LT" gate="G$1" pin="A"/>
 <wire x1="167.64" y1="71.12" x2="167.64" y2="66.04" width="0.1524" layer="91"/>
 </segment>
 </net>

@@ -19,100 +19,87 @@ int main()
 {
 	// Variable Declarations
 	char user_input;
-	int errorNtwk = 0;
+	int errorNtwk		= 0;
 	int  ui_flag		= 0;
 	char remote_IP[20] 	= {"127.0.0.1"};
 	struct game_data_struct *game_data;
 
+	// Allocate memory for game_data
 	game_data = (struct game_data_struct*)malloc(sizeof(struct game_data_struct));
 
-	//////////////////////////////////////////
-	Write_PortB(RED_LT, 1);
-	Delay_ms(500);
-	Write_PortB(RED_LT, 0);
-	Delay_ms(500);
-	Write_PortB(GRN_LT, 1);
-	Delay_ms(500);
-	Write_PortB(GRN_LT, 0);
-	Delay_ms(500);
-	Write_PortB(BLU_LT, 1);
-	Delay_ms(500);
-	Write_PortB(BLU_LT, 0);
-	Delay_ms(500);
-	Write_PortB(YEL_LT, 1);
-	Delay_ms(500);
-	Write_PortB(YEL_LT, 0);
-	Delay_ms(500);
-
-
 	// Initialization
-		// Game Variables
-		//memset();
-		game_data->round_num = 1;
+	// Game Variables
+	game_data->round_num = 1;
+	game_data->winner = 0;
 
+	TestLeds();
 
-		// Print Game Info
-		PrintHeader();
+	// Print Game Info
+	PrintHeader();
 
-		// Determine Player (1/2)
-		do
+	// Determine Player (1/2)
+	do
+	{
+		// If ui_flag has been set, the loop is no longer on its first iteration; print error message.
+		if (ui_flag > 0)
 		{
-			// If ui_flag has been set, the loop is no longer on its first iteration; print error message.
-			if (ui_flag > 0)
-			{
-				printf("Sorry, that is not a valid player number, please try again: \n");
-				fflush(stdout);
-			}
-
-			// Get User Input
-			user_input = getchar();
-
-			if (user_input == '1')
-			{
-				printf("SUCCESS\n");
-			}
-
-			// Increment ui_flag
-			ui_flag += 1;
-
-		} while ((user_input < '1') | (user_input > '2'));
-
-
-		if (user_input == '1')
-		{
-			// Open Connection With Remote Host
-			printf("CALL SendInit\n");
-			SendInit(remote_IP, TCP_PORT);
+			printf("Sorry, that is not a valid player number, please try again: \n");
+			fflush(stdout);
 		}
-		else if (user_input == '2')
-		{
-			// Initialize Recieve
-			printf("CALL RecvInit\n");
-			errorNtwk = RecvInit(TCP_PORT);
-			if (errorNtwk == 0)
-				NtwkWait();
-			else
-				printf("Network Error: %d\n", errorNtwk);
-		}
+
+		// Get User Input
+		user_input = getchar();
+
+		// Increment ui_flag
+		ui_flag += 1;
+
+	} while ((user_input < '1') | (user_input > '2'));
+
+	printf("Initializing Network connection\n");
+	if (user_input == '1')
+	{
+		// Open Connection With Remote Host
+		SendInit(remote_IP, TCP_PORT);
+	}
+	else if (user_input == '2')
+	{
+		// Initialize Recieve
+		errorNtwk = RecvInit(TCP_PORT);
+		if (errorNtwk == 0)
+			NtwkWait();
+		else
+			printf("Network Error: %d\n", errorNtwk);
+	}
 
 	// Main Game Play Loop
-	while (game_data->round_num <= MAX_ROUNDS | game_data->round_num == 0)
+	while (game_data->round_num <= MAX_ROUNDS | game_data->round_num != 0)
 	{
 
 		// If player 1
 		if (user_input == '1')
 		{
 			// Record New Pattern Based On User Input
-			printf("CALL SetPattern\n");
+			printf("Set a pattern for the other player to repeat\n");
 			SetPattern(game_data);
 
 			// Send Current Pattern To Remote Host
-			printf("CALL TxPattern\n");
-			TxPattern(game_data);
+			errorNtwk = TxPattern(game_data);
+
+			if (errorNtwk != 0)
+			{
+				printf("Network Failure, Exiting game\n");
+				exit(0);
+			}
 
 			// Recieve Pattern From Remote Host and Store As Current Pattern
-			printf("CALL RxPattern\n");
-			RxPattern(game_data);
+			printf("Waiting for player 1 to make a pattern\n");
+			errorNtwk = RxPattern(game_data);
+
+			if (errorNtwk != 0)
+			{
+				printf("Network Failure, Exiting game\n");
+				exit(0);
+			}
 
 			if (game_data->round_num == 0)
 			{
@@ -121,21 +108,28 @@ int main()
 			}
 
 			// Play Back Current Pattern
-			printf("CALL PlayPattern\n");
+			printf("Watch the pattern closely\n");
 			PlayPattern(game_data);
 
 			// Let the player repeat the pattern
-			printf("CALL PlayerRepeatPattern\n");
+			printf("Time to repeat that pattern\n");
 			PlayerRepeatPattern(game_data);
 
 			game_data->round_num++;
+			printf("Round Number: %d", game_data->round_num);
 
 		}
 		else
 		{
-			printf("CALL RxPattern\n");
+			printf("Waiting for player 1 to make a pattern\n");
 			// Recieve Pattern From Remote Host and Store As Current Pattern
-			RxPattern(game_data);
+			errorNtwk = RxPattern(game_data);
+
+			if (errorNtwk != 0)
+			{
+				printf("Network Failure, Exiting game\n");
+				exit(0);
+			}
 
 			if (game_data->round_num == 0)
 			{
@@ -144,22 +138,27 @@ int main()
 			}
 
 			// Play Back Current Pattern
-			printf("CALL PlayPattern\n");
+			printf("Watch the pattern closely\n");
 			PlayPattern(game_data);
 
-			// Let the player repeat the pattern
-			printf("CALL PlayerRepeatPattern\n");
+			printf("Time to repeat that pattern\n");
 			PlayerRepeatPattern(game_data);
 
 			// Record New Pattern Based On User Input
-			printf("CALL SetPattern\n");
+			printf("Set a pattern for the other player to repeat\n");
 			SetPattern(game_data);
 
 			// Send Current Pattern To Remote Host
-			printf("CALL TxPattern\n");
-			TxPattern(game_data);
+			errorNtwk = TxPattern(game_data);
+
+			if (errorNtwk != 0)
+			{
+				printf("Network Failure, Exiting game\n");
+				exit(0);
+			}
 
 			game_data->round_num++;
+			printf("Round Number: %d", game_data->round_num);
 
 		}
 
@@ -167,7 +166,7 @@ int main()
 
 
 	// Display End Game Info Based On Round Number
-	if (game_data->round_num > MAX_ROUNDS)
+	if (game_data->round_num >= MAX_ROUNDS)
 	{
 		printf("Max number of rounds has been reached.  Congratulations, you beat the game!\n");
 
@@ -189,6 +188,7 @@ int main()
 
 	printf("Game Over\n");
 
+	free(game_data);
 	// Terminate Network Connection
 	NtwkExit();
 
@@ -204,3 +204,27 @@ void PrintHeader(void)
 	printf("Player 1 or 2:");
 
 } // END PrintHeader
+
+// Test all LEDs in order
+void TestLeds(void)
+{
+
+	// Test all of the LEDs for proper operation
+	Write_PortB(RED_LT, 1);
+	Delay_ms(500);
+	Write_PortB(RED_LT, 0);
+	Delay_ms(500);
+	Write_PortB(GRN_LT, 1);
+	Delay_ms(500);
+	Write_PortB(GRN_LT, 0);
+	Delay_ms(500);
+	Write_PortB(BLU_LT, 1);
+	Delay_ms(500);
+	Write_PortB(BLU_LT, 0);
+	Delay_ms(500);
+	Write_PortB(YEL_LT, 1);
+	Delay_ms(500);
+	Write_PortB(YEL_LT, 0);
+	Delay_ms(500);
+
+} // END TestLeds

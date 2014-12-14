@@ -53,9 +53,10 @@ struct game_data_struct
 
 // FUNCTION PROTOTYPES
 void PrintHeader(void);
+void TestLeds(void);
 void PlayPattern(struct game_data_struct*);
-void TxPattern(struct game_data_struct*);
-void RxPattern(struct game_data_struct*);
+int TxPattern(struct game_data_struct*);
+int RxPattern(struct game_data_struct*);
 void Delay_ms(int);
 void PlayerRepeatPattern(struct game_data_struct*);
 

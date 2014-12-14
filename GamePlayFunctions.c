@@ -14,6 +14,7 @@
 void SetPattern(struct game_data_struct *game_data)
 {
 	int loop_ctr;
+	char redState, greenState, blueState, yellowState;
 
 	// Re-Iterate pattern capture length to match round number.
 	for (loop_ctr = 0; loop_ctr < game_data->round_num; loop_ctr++)
@@ -25,56 +26,66 @@ void SetPattern(struct game_data_struct *game_data)
 		Write_PortB(BLU_LT, 1);
 		Write_PortB(YEL_LT, 1);
 
+		redState = Read_PortB(RED_PB);
+		greenState = Read_PortB(GRN_PB);
+		blueState = Read_PortB(BLU_PB);
+		yellowState = Read_PortB(YEL_PB);
+
 		// Block, then save and show input color.
-		while((Read_PortB(RED_PB) != ACTIVE) & (Read_PortB(GRN_PB) != ACTIVE) & (Read_PortB(BLU_PB) != ACTIVE) & (Read_PortB(YEL_PB) != ACTIVE))
+		while ((redState != ACTIVE) & (greenState != ACTIVE) & (blueState != ACTIVE) & (yellowState != ACTIVE))
 		{
+			redState = Read_PortB(RED_PB);
+			greenState = Read_PortB(GRN_PB);
+			blueState = Read_PortB(BLU_PB);
+			yellowState = Read_PortB(YEL_PB);
 			Delay_ms(5);
 		}
 
 
-			if (Read_PortB(RED_PB) == ACTIVE)
-			{
-				printf("RED_PB\n");
-				game_data->pattern[loop_ctr] = 'R';
-				Write_PortB(RED_LT, 1);
-				Write_PortB(GRN_LT, 0);
-				Write_PortB(BLU_LT, 0);
-				Write_PortB(YEL_LT, 0);
-			}
-			else if (Read_PortB(GRN_PB) == ACTIVE)
-			{
-				printf("GRN_PB\n");
-				game_data->pattern[loop_ctr] = 'G';
-				Write_PortB(RED_LT, 0);
-				Write_PortB(GRN_LT, 1);
-				Write_PortB(BLU_LT, 0);
-				Write_PortB(YEL_LT, 0);
-			}
-			else if (Read_PortB(BLU_PB) == ACTIVE)
-			{
-				printf("BLU_PB\n");
-				game_data->pattern[loop_ctr] = 'B';
-				Write_PortB(RED_LT, 0);
-				Write_PortB(GRN_LT, 0);
-				Write_PortB(BLU_LT, 1);
-				Write_PortB(YEL_LT, 0);
-			}
-			else if (Read_PortB(YEL_PB) == ACTIVE)
-			{
-				printf("YEL_PB\n");
-				game_data->pattern[loop_ctr] = 'Y';
-				Write_PortB(RED_LT, 0);
-				Write_PortB(GRN_LT, 0);
-				Write_PortB(BLU_LT, 0);
-				Write_PortB(YEL_LT, 1);
-			}
-			else
-			{
+		if (redState == ACTIVE)
+		{
+			printf("RED_PB\n");
+			game_data->pattern[loop_ctr] = 'R';
+			Write_PortB(RED_LT, 1);
+			Write_PortB(GRN_LT, 0);
+			Write_PortB(BLU_LT, 0);
+			Write_PortB(YEL_LT, 0);
+		}
+		else if (greenState == ACTIVE)
+		{
+			printf("GRN_PB\n");
+			game_data->pattern[loop_ctr] = 'G';
+			Write_PortB(RED_LT, 0);
+			Write_PortB(GRN_LT, 1);
+			Write_PortB(BLU_LT, 0);
+			Write_PortB(YEL_LT, 0);
+		}
+		else if (blueState == ACTIVE)
+		{
+			printf("BLU_PB\n");
+			game_data->pattern[loop_ctr] = 'B';
+			Write_PortB(RED_LT, 0);
+			Write_PortB(GRN_LT, 0);
+			Write_PortB(BLU_LT, 1);
+			Write_PortB(YEL_LT, 0);
+		}
+		else if (yellowState == ACTIVE)
+		{
+			printf("YEL_PB\n");
+			game_data->pattern[loop_ctr] = 'Y';
+			Write_PortB(RED_LT, 0);
+			Write_PortB(GRN_LT, 0);
+			Write_PortB(BLU_LT, 0);
+			Write_PortB(YEL_LT, 1);
+		}
+		else
+		{
+			//We somehow exited the while loop without a button being pressed
+			printf("Error, no buttons pressed\n");
+		}
 
-			}
-
-			// Hold to show saved color.
-			Delay_ms(500);
+		// Hold to show saved color.
+		Delay_ms(500);
 
 		// Ensure All Outputs Are Off
 		Write_PortB(RED_LT, 0);
@@ -94,8 +105,6 @@ void PlayPattern(struct game_data_struct *game_data)
 
 	for (loop_ctr = 0; loop_ctr < game_data->round_num; loop_ctr ++)
 	{
-		//
-		printf("Play Pattern Loop Iteration: %d (%c)\n", loop_ctr, game_data->pattern[loop_ctr]);
 
 		// Pause Before Next Color
 		Delay_ms(PATTERN_PLAYBACK_DELAY);
@@ -104,27 +113,22 @@ void PlayPattern(struct game_data_struct *game_data)
 		switch(game_data->pattern[loop_ctr])
 		{
 			case 'R':
-				printf("Turn on Red\n");
 				Write_PortB(RED_LT, 1);
 				break;
 
 			case 'G':
-				printf("Turn on Green\n");
 				Write_PortB(GRN_LT, 1);
 				break;
 
 			case 'B':
-				printf("Turn on Blue\n");
 				Write_PortB(BLU_LT, 1);
 				break;
 
 			case 'Y':
-				printf("Turn on yellow\n");
 				Write_PortB(YEL_LT, 1);
 				break;
 
 			default:
-				printf("Turn off\n");
 				Write_PortB(RED_LT, 0);
 				Write_PortB(GRN_LT, 0);
 				Write_PortB(BLU_LT, 0);
@@ -146,7 +150,7 @@ void PlayPattern(struct game_data_struct *game_data)
 
 
 // Send Current Pattern To Remote Host
-void TxPattern(struct game_data_struct *game_data)
+int TxPattern(struct game_data_struct *game_data)
 {
 	// Send game_data struct to remote host.
 	NtwkSend(sizeof(struct game_data_struct), game_data);
@@ -155,7 +159,7 @@ void TxPattern(struct game_data_struct *game_data)
 
 
 // Recieve Pattern From Remote Host and Store As Current Psttern
-void RxPattern(struct game_data_struct *game_data)
+int RxPattern(struct game_data_struct *game_data)
 {
 	// Recieve game_data struct from remote host.
 	do
@@ -167,73 +171,82 @@ void RxPattern(struct game_data_struct *game_data)
 } // END RxPattern
 
 
-//
+// Waits for the user to input the last pattern played for them
 void PlayerRepeatPattern(struct game_data_struct *game_data)
 {
 	char Repeatpattern[MAX_PATTERN_LENGTH] = { 0 };
 	char loop_ctr;
+	char redState, greenState, blueState, yellowState;
 
 	// Re-Iterate pattern capture length to match round number.
 	for (loop_ctr = 0; loop_ctr < game_data->round_num; loop_ctr++)
 	{
 
+		redState = Read_PortB(RED_PB);
+		greenState = Read_PortB(GRN_PB);
+		blueState = Read_PortB(BLU_PB);
+		yellowState = Read_PortB(YEL_PB);
+
 		// Block, then save and show input color.
-		while((Read_PortB(RED_PB) != ACTIVE) & (Read_PortB(GRN_PB) != ACTIVE) & (Read_PortB(BLU_PB) != ACTIVE) & (Read_PortB(YEL_PB) != ACTIVE))
+		while ((redState != ACTIVE) & (greenState != ACTIVE) & (blueState != ACTIVE) & (yellowState != ACTIVE))
 		{
+			redState = Read_PortB(RED_PB);
+			greenState = Read_PortB(GRN_PB);
+			blueState = Read_PortB(BLU_PB);
+			yellowState = Read_PortB(YEL_PB);
 			Delay_ms(5);
 		}
 
+		if (redState == ACTIVE)
+		{
+			Repeatpattern[loop_ctr] = 'R';
+			Write_PortB(RED_LT, 1);
+			Write_PortB(GRN_LT, 0);
+			Write_PortB(BLU_LT, 0);
+			Write_PortB(YEL_LT, 0);
+		}
+		else if (greenState == ACTIVE)
+		{
+			Repeatpattern[loop_ctr] = 'G';
+			Write_PortB(RED_LT, 0);
+			Write_PortB(GRN_LT, 1);
+			Write_PortB(BLU_LT, 0);
+			Write_PortB(YEL_LT, 0);
+		}
+		else if (blueState == ACTIVE)
+		{
+			Repeatpattern[loop_ctr] = 'B';
+			Write_PortB(RED_LT, 0);
+			Write_PortB(GRN_LT, 0);
+			Write_PortB(BLU_LT, 1);
+			Write_PortB(YEL_LT, 0);
+		}
+		else if (yellowState == ACTIVE)
+		{
+			Repeatpattern[loop_ctr] = 'Y';
+			Write_PortB(RED_LT, 0);
+			Write_PortB(GRN_LT, 0);
+			Write_PortB(BLU_LT, 0);
+			Write_PortB(YEL_LT, 1);
+		}
 
-			if (Read_PortB(RED_PB) == ACTIVE)
-			{
-				printf("Turn on Red\n");
-				Repeatpattern[loop_ctr] = 'R';
-				Write_PortB(RED_LT, 1);
-				Write_PortB(GRN_LT, 0);
-				Write_PortB(BLU_LT, 0);
-				Write_PortB(YEL_LT, 0);
-			}
-			else if (Read_PortB(GRN_PB) == ACTIVE)
-			{
-				printf("Turn on Green\n");
-				Repeatpattern[loop_ctr] = 'G';
-				Write_PortB(RED_LT, 0);
-				Write_PortB(GRN_LT, 1);
-				Write_PortB(BLU_LT, 0);
-				Write_PortB(YEL_LT, 0);
-			}
-			else if (Read_PortB(BLU_PB) == ACTIVE)
-			{
-				printf("Turn on Blue\n");
-				Repeatpattern[loop_ctr] = 'B';
-				Write_PortB(RED_LT, 0);
-				Write_PortB(GRN_LT, 0);
-				Write_PortB(BLU_LT, 1);
-				Write_PortB(YEL_LT, 0);
-			}
-			else if (Read_PortB(YEL_PB) == ACTIVE)
-			{
-				printf("Turn on yellow\n");
-				Repeatpattern[loop_ctr] = 'Y';
-				Write_PortB(RED_LT, 0);
-				Write_PortB(GRN_LT, 0);
-				Write_PortB(BLU_LT, 0);
-				Write_PortB(YEL_LT, 1);
-			}
-			else
-			{
-				//
-			}
 
-			// Hold to show saved color.
-			Delay_ms(250);
+		// Hold to show saved color then turn off
+		Delay_ms(500);
 
-			// Check if the new input matches the correct pattern
-			if (Repeatpattern[loop_ctr] != game_data->pattern[loop_ctr])
-			{ 
-				game_data->round_num = 0;
-				break;
-			}
+		Write_PortB(RED_LT, 0);
+		Write_PortB(GRN_LT, 0);
+		Write_PortB(BLU_LT, 0);
+		Write_PortB(YEL_LT, 0);
+
+		// Check if the new input matches the correct pattern
+		if (Repeatpattern[loop_ctr] != game_data->pattern[loop_ctr])
+		{ 
+			// The player was incorrect
+			// Set round to 0 and break
+			game_data->round_num = 0;
+			break;
+		}
 
 
 		// Game is over, player lost
@@ -241,6 +254,7 @@ void PlayerRepeatPattern(struct game_data_struct *game_data)
 		{
 			printf("game over\n");
 			// Transmit to other side that the game is over and that they won
+			// Set them to be winner first before doing so, then set winner back to 2
 			game_data->winner = 1;
 			TxPattern(game_data);
 			game_data->winner = 2;
@@ -249,7 +263,6 @@ void PlayerRepeatPattern(struct game_data_struct *game_data)
 	}
 
 }
-
 
 // Sleep For The Specified Number Of Milliseconds
 void Delay_ms(int ms)

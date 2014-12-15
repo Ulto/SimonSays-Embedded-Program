@@ -8,8 +8,7 @@
 // MAIN
 
 /* SUMMARY
-
-The purpose of this program is to act as a network-able Simon says game. 
+The purpose of this program is to act as a network-able Simon game. 
 The user is prompted for their player number (1 or 2), then the game begins 
 with player 1 setting a pattern (red, green, blue, or yellow) with push buttons. 
 The pattern is transmitted to player 2, where it is played and waits for the 

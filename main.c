@@ -7,6 +7,22 @@
 //
 // MAIN
 
+/* SUMMARY
+
+The purpose of this program is to act as a network-able Simon says game. 
+The user is prompted for their player number (1 or 2), then the game begins 
+with player 1 setting a pattern (red, green, blue, or yellow) with push buttons. 
+The pattern is transmitted to player 2, where it is played and waits for the 
+player to repeat it on the push buttons. If successful, player 2 will set a 
+pattern and player 1 will repeat it. Once both player have successfully repeated 
+a pattern, the round number increments, also increasing the size of the pattern by 
+1 color. Each round the player can set the pattern from scratch, adding difficulty 
+to the normal Simon game.
+
+Once the maximum amount of rounds is reached (25) or a player inputs a wrong pattern, 
+the game is over and the players are notified of the winner.
+*/
+
 
 // INCLUDES
 #include <stdio.h>
